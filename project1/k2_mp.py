@@ -223,11 +223,11 @@ def k2_search(D, topologicalOrder):
 
 
 if __name__ == "__main__":
-    f = open("../data/small.csv", "r")
+    f = open("./data/small.csv", "r")
     reader = csv.reader(f)
     headers = next(reader)
     f.close()
-    D = genfromtxt("../data/small.csv", delimiter=",", skip_header=1)
+    D = genfromtxt("./data/small.csv", delimiter=",", skip_header=1)
     start_time = time.time()
     score_arr = []
     score_cache = {}
@@ -237,7 +237,7 @@ if __name__ == "__main__":
     futures_list = []
     results = []
     best_score = None
-    with ProcessPoolExecutor(max_workers=8) as executor:
+    with ProcessPoolExecutor(max_workers=16) as executor:
         for topologicalOrder in l:
             topologicalOrder = np.array(topologicalOrder)
             futures = executor.submit(k2_search, D, topologicalOrder)
@@ -258,25 +258,4 @@ if __name__ == "__main__":
                     print(f"current best score: {best_score}")
 
             except Exception:
-                results.append(None)
-    
-    # for iter in range(100):
-    #     print("ITERATION NUMBER", iter)
-
-    #     topologicalOrder = list(np.random.choice(D.shape[1], D.shape[1], replace=False))
-    #     topologicalOrder = np.array(topologicalOrder)
-    #     G, parents, best_score = k2_search(D, topologicalOrder)
-
-    #     score_arr += [best_score]
-    #     score_cache[len(score_arr) - 1] = parents
-    #     print("The FINAL SCORE is:", best_score)
-
-    best_score = np.argmax(score_arr)
-    parents = score_cache[best_score]
-    print(f"all the scores are: {score_arr},best score is: {score_arr[best_score]}")
-    print(f"It took about: {(time.time() - start_time)} seconds")
-    f = open("../data/small.csv", "r")
-    reader = csv.reader(f)
-    headers = next(reader)
-    print("headers are", headers)
-    
+                results.append(None)    
